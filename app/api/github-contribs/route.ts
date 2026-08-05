@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { getEnv } from "@/lib/cloudflare-env";
 
 const GITHUB_GRAPHQL = "https://api.github.com/graphql";
 
@@ -13,10 +14,11 @@ function isoDayRange(dateStr: string) {
 
 export async function GET(request: Request) {
   try {
+    const env = getEnv();
     const url = new URL(request.url);
     const date = url.searchParams.get("date");
-    const username = url.searchParams.get("username") || process.env.GITHUB_USER;
-    const token = process.env.GITHUB_TOKEN;
+    const username = url.searchParams.get("username") || env.GITHUB_USER;
+    const token = env.GITHUB_TOKEN;
 
     if (!token) return NextResponse.json({ error: "GITHUB_TOKEN not set" }, { status: 500 });
     if (!username) return NextResponse.json({ error: "username query param or GITHUB_USER env required" }, { status: 400 });
@@ -26,7 +28,7 @@ export async function GET(request: Request) {
     const repoQuery = `query($username: String!) { user(login: $username) { repositories(first: 100, ownerAffiliations: OWNER, isFork: false) { nodes { name } } } }`;
     const repoResp = await fetch(GITHUB_GRAPHQL, {
       method: "POST",
-      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json", "User-Agent": "lee-leighnard-portfolio" },
       body: JSON.stringify({ query: repoQuery, variables: { username } }),
     });
     if (!repoResp.ok) return NextResponse.json({ error: await repoResp.text() }, { status: repoResp.status });
@@ -43,7 +45,7 @@ export async function GET(request: Request) {
       const q = `query($owner:String!,$name:String!,$since:GitTimestamp!,$until:GitTimestamp!) { repository(owner:$owner,name:$name) { defaultBranchRef { target { ... on Commit { history(first: 20, since: $since, until: $until) { nodes { oid committedDate messageHeadline message author { user { login } name email } } } } } } }`;
       const res = await fetch(GITHUB_GRAPHQL, {
         method: "POST",
-        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json", "User-Agent": "lee-leighnard-portfolio" },
         body: JSON.stringify({ query: q, variables: { owner: username, name: repoName, since: from, until: to } }),
       });
       if (!res.ok) continue;

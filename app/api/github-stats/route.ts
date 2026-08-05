@@ -1,12 +1,14 @@
 import { NextResponse } from "next/server";
+import { getEnv } from "@/lib/cloudflare-env";
 
 const GITHUB_GRAPHQL = "https://api.github.com/graphql";
 
 export async function GET(request: Request) {
   try {
+    const env = getEnv();
     const url = new URL(request.url);
-    const username = url.searchParams.get("username") || process.env.GITHUB_USER;
-    const token = process.env.GITHUB_TOKEN;
+    const username = url.searchParams.get("username") || env.GITHUB_USER;
+    const token = env.GITHUB_TOKEN;
 
     if (!token) {
       return NextResponse.json({ error: "GITHUB_TOKEN not set" }, { status: 500 });
@@ -51,6 +53,7 @@ export async function GET(request: Request) {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
+        "User-Agent": "lee-leighnard-portfolio",
       },
       body: JSON.stringify({ query, variables: { username, from, to } }),
     });
