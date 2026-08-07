@@ -80,6 +80,17 @@ export const projects = [
   },
   {
     id: "3",
+    title: "Maison Vine | Premium Wine Collection",
+    description:
+      "Elevate your everyday moments and special occasions with Maison Vine. We bring together a handpicked selection of premium wines from renowned wine regions around the world. Explore robust reds, crisp whites, refined champagnes, and exclusive labels crafted for every palate.",
+    image: "maisonvine.png",
+    tags: ["Next.js"],
+    githubUrl: "https://github.com/yukidanao/maisonvine",
+    liveUrl: 'https://maisonvine.pages.dev',
+    featured: true,
+  },
+  {
+    id: "4",
     title: "New Ilalim School LMS",
     description:
       "Comprehensive Learning Management System with tailored role-based dashboards for instructors, students, and administrators. Deployed on VPS with Cloudflare DNS management and cloud-hosted accessibility.",
@@ -87,10 +98,10 @@ export const projects = [
     tags: ["Angular", "Node.js", "MySQL", "Cloudflare"],
     githubUrl: "https://github.com/yukidanao/ilalim-lms",
     liveUrl: 'https://lms-26v.pages.dev/',
-    featured: true,
+    featured: false,
   },
   {
-    id: "4",
+    id: "5",
     title: "VoiceOut!",
     description:
       "Full-stack platform for posting notes with video and audio support using WebSocket for real-time post display. Integrated Cloudinary API for cloud-based asset storage and pagination for optimized server load.",
@@ -101,7 +112,7 @@ export const projects = [
     featured: false,
   },
   {
-    id: "5",
+    id: "6",
     title: "LiteraSEE",
     description:
       "IoT application using ESP32 smart eyeglasses to assist dyslexic individuals. Integrates Gemini AI for text correction, OCR Space API for real-world text parsing, and Voice RSS API for text-to-speech output with live camera feed display.",
