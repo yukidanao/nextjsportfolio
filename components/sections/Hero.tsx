@@ -54,7 +54,7 @@ const BACKGROUND_PROJECTS = [
   { src: "/hoams.png", alt: "HOAMS", rotate: 3, offset: "mt-4" },
   { src: "/richtv.png", alt: "Rich TV", rotate: 6, offset: "mt-16" },
   { src: "/newilalim.png", alt: "New Ilalim School LMS", rotate: 8, offset: "mt-8" },
-  { src: "/voiceout.png", alt: "VoiceOut!", rotate: 5, offset: "mt-20" },
+  { src: "/corkroom.png", alt: "Cork Room", rotate: 5, offset: "mt-20" },
   { src: "/maisonvine.png", alt: "Maison Vine", rotate: 2, offset: "mt-12" },
 ];
 

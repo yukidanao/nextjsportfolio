@@ -87,32 +87,42 @@ export const projects = [
     tags: ["Next.js"],
     githubUrl: "https://github.com/yukidanao/maisonvine",
     liveUrl: 'https://maisonvine.pages.dev',
-    featured: true,
+    featured: false,
   },
   {
     id: "4",
+    title: "Cork Room - Subic's Bar & Restaurant",
+    description:
+      "A responsive Next.js restaurant website featuring an interactive menu, immersive galleries, live music showcase, and contact experience.",
+    image: "corkroom.png",
+    tags: ["Next.js"],
+    githubUrl: "https://github.com/yukidanao/corkroom",
+    liveUrl: 'https://corkroom.pages.dev',
+    featured: true,
+  },
+  {
+    id: "5",
     title: "New Ilalim School LMS",
     description:
       "Comprehensive Learning Management System with tailored role-based dashboards for instructors, students, and administrators. Deployed on VPS with Cloudflare DNS management and cloud-hosted accessibility.",
     image: "newilalim.png",
     tags: ["Angular", "Node.js", "MySQL", "Cloudflare"],
-    githubUrl: "https://github.com/yukidanao/ilalim-lms",
     liveUrl: 'https://lms-26v.pages.dev/',
     featured: false,
   },
   {
-    id: "5",
+    id: "6",
     title: "VoiceOut!",
     description:
       "Full-stack platform for posting notes with video and audio support using WebSocket for real-time post display. Integrated Cloudinary API for cloud-based asset storage and pagination for optimized server load.",
     image: "voiceout.png",
     tags: ["Angular", "Node.js", "MongoDB", "WebSocket"],
-    githubUrl: "https://github.com/yukidanao/voiceout",
+    githubUrl: "https://github.com/yukidanao/voice-out-frontend",
     liveUrl: 'https://voiceout.pages.dev',
     featured: false,
   },
   {
-    id: "6",
+    id: "7",
     title: "LiteraSEE",
     description:
       "IoT application using ESP32 smart eyeglasses to assist dyslexic individuals. Integrates Gemini AI for text correction, OCR Space API for real-world text parsing, and Voice RSS API for text-to-speech output with live camera feed display.",
