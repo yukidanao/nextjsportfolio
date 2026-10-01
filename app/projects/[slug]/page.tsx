@@ -14,7 +14,12 @@ export function generateStaticParams() {
   return projectsWithDetail.map((project) => ({ slug: project.slug as string }));
 }
 
-export const dynamicParams = false;
+// `dynamicParams` is intentionally left at its default. This app runs on
+// Cloudflare Workers with no persistent incremental cache, so every request is
+// a cache MISS. With `dynamicParams = false` a cold cache cannot validate the
+// slug against the prerender manifest and Next serves a 404 for a page that
+// built fine. Unknown slugs are already rejected by the `notFound()` guard
+// below, so turning this off costs nothing.
 
 export async function generateMetadata({
   params,
