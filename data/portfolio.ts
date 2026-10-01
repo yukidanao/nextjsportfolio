@@ -55,9 +55,151 @@ export const skills = {
   AI: ["ChatGPT Codex", "Claude Code", "Deep Seek"],
 };
 
-export const projects = [
+export type ProjectVideo = {
+  /** Direct MP4 URL. Rendered with a native <video> element. */
+  src?: string;
+  /** External player embed URL (MEGA, YouTube, Vimeo). Rendered in an <iframe>. */
+  embedUrl?: string;
+  /** Where to send people if the embed is blocked or fails. */
+  fallbackUrl?: string;
+  /** Label for the fallback link, e.g. "MEGA". */
+  fallbackLabel?: string;
+  /** Still frame shown before playback is requested. */
+  poster?: string;
+  /** Accessible name for the player. */
+  label: string;
+};
+
+export type DetailSection =
+  | { kind: "steps"; heading: string; items: { marker: string; text: string }[] }
+  | { kind: "prose"; heading: string; body: string }
+  | {
+      kind: "features";
+      heading: string;
+      items: { marker: string; title: string; body: string }[];
+    }
+  | { kind: "list"; heading: string; items: string[] };
+
+export type ProjectDetail = {
+  lead: string;
+  sections: DetailSection[];
+};
+
+export type Project = {
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  tags: string[];
+  slug?: string;
+  video?: ProjectVideo;
+  detail?: ProjectDetail;
+  githubUrl?: string;
+  liveUrl?: string;
+  featured: boolean;
+};
+
+export const projects: Project[] = [
   {
     id: "1",
+    title: "LeeClip",
+    description:
+      "A fully local pipeline that turns a 90-minute podcast into ready-to-post vertical clips. No cloud, no subscription — the footage never leaves the machine.",
+    image: "leeclip.png",
+    tags: ["Next.js", "TypeScript", "Whisper", "Ollama", "FFmpeg", "SQLite"],
+    slug: "leeclip",
+    video: {
+      poster: "leeclip.png",
+      // MEGA embeds are /embed/<file-handle>#<decryption-key> — the handle in
+      // the path, the key in the fragment. The /file/ variant sets
+      // X-Frame-Options: SAMEORIGIN and cannot be iframed.
+      embedUrl:
+        "https://mega.nz/embed/pEdXTDBJ#2S-m-aCMNhO2UsMD0DBkzxytYB1O6-fnR6gKe610MZM",
+      fallbackUrl:
+        "https://mega.nz/file/pEdXTDBJ#2S-m-aCMNhO2UsMD0DBkzxytYB1O6-fnR6gKe610MZM",
+      fallbackLabel: "MEGA",
+      label: "LeeClip showcase",
+    },
+    detail: {
+      lead: "Turns a 90-minute podcast into ready-to-post vertical clips, entirely on my own PC. No cloud. No subscription. My footage never leaves the machine.",
+      sections: [
+        {
+          kind: "steps",
+          heading: "The clipping pipeline",
+          items: [
+            {
+              marker: "🎬",
+              text: "Drop in a long video (podcast, interview, stream, YouTube)",
+            },
+            {
+              marker: "🗣️",
+              text: "It transcribes the whole thing locally, word by word",
+            },
+            {
+              marker: "✨",
+              text: "It finds the moments worth clipping on its own",
+            },
+            {
+              marker: "🔥",
+              text: "Each one gets scored — how strong the hook is, whether it makes sense without the rest of the video, whether the payoff actually lands, and whether the speaker gets genuinely animated",
+            },
+            {
+              marker: "🛠️",
+              text: "I review, nudge the start/end points, approve what I like",
+            },
+            { marker: "📐", text: "It reframes to 9:16 and follows whoever is talking" },
+            {
+              marker: "✍️",
+              text: "Captions burned in, plus a title I drag into place myself",
+            },
+            { marker: "📤", text: "Export the MP4" },
+          ],
+        },
+        {
+          kind: "prose",
+          heading: "The part I'm happiest with",
+          body: "The crop follows the speaker. Not a lazy centre crop that frames the middle of the screen while the interesting person talks off to the side. It listens to who's talking and glides the frame onto their face.",
+        },
+        {
+          kind: "features",
+          heading:
+            "Three things in here aren't really about clipping at all",
+          items: [
+            {
+              marker: "💬",
+              title: "Caption burn",
+              body: "Pick any stretch, or the whole video, and burn word-by-word captions into it at the original resolution and aspect ratio, with my own colour palette. Same transcript the clips use. This is what made my own uploads watchable with the sound off.",
+            },
+            {
+              marker: "🎙️",
+              title: "Voice cloning",
+              body: "Record half a minute of yourself once, and LeeClip can then speak new lines in your voice, with dials for emotion and delivery so it doesn't come out flat and robotic.",
+            },
+            {
+              marker: "📺",
+              title: "Publishing",
+              body: "Connect a YouTube channel and push a finished export straight up with title, description, privacy and a schedule.",
+            },
+          ],
+        },
+        {
+          kind: "list",
+          heading: "What's under the hood",
+          items: [
+            "FFmpeg for the video processing",
+            "Whisper for transcription — runs fine on CPU, uses the GPU if there is one",
+            "A small local model via Ollama (Qwen / Llama / Gemma) to judge and rank the clips, with an option to plug in any OpenAI-compatible API instead",
+            "OpenCV's YuNet for face detection, pyannote for telling speakers apart",
+            "Chatterbox Turbo for the voice cloning",
+            "Next.js, React, TypeScript and Tailwind for the interface, Node/Express and SQLite behind it",
+          ],
+        },
+      ],
+    },
+    featured: true,
+  },
+  {
+    id: "2",
     title: "HOAMS",
     description:
       "Full-stack homeowner management system with QR-based payment tracking. Features JWT authentication, role-based access control, 95% faster API response times through caching optimization, and exportable reporting for 1,000+ homeowner records.",
@@ -68,7 +210,7 @@ export const projects = [
     featured: true,
   },
   {
-    id: "2",
+    id: "3",
     title: "Rich TV",
     description:
       "Immerse yourself in a vast, carefully curated collection of blockbuster movies, binge-worthy TV series, and trending shows. Experience seamless, high-definition streaming on demand—bringing the ultimate cinematic experience straight to your screen, anytime and anywhere you want.",
@@ -79,7 +221,7 @@ export const projects = [
     featured: true,
   },
   {
-    id: "3",
+    id: "4",
     title: "Maison Vine | Premium Wine Collection",
     description:
       "Elevate your everyday moments and special occasions with Maison Vine. We bring together a handpicked selection of premium wines from renowned wine regions around the world. Explore robust reds, crisp whites, refined champagnes, and exclusive labels crafted for every palate.",
@@ -90,7 +232,7 @@ export const projects = [
     featured: false,
   },
   {
-    id: "4",
+    id: "5",
     title: "Cork Room - Subic's Bar & Restaurant",
     description:
       "A responsive Next.js restaurant website featuring an interactive menu, immersive galleries, live music showcase, and contact experience.",
@@ -101,7 +243,7 @@ export const projects = [
     featured: true,
   },
   {
-    id: "5",
+    id: "6",
     title: "New Ilalim School LMS",
     description:
       "Comprehensive Learning Management System with tailored role-based dashboards for instructors, students, and administrators. Deployed on VPS with Cloudflare DNS management and cloud-hosted accessibility.",
@@ -111,7 +253,7 @@ export const projects = [
     featured: false,
   },
   {
-    id: "6",
+    id: "7",
     title: "VoiceOut!",
     description:
       "Full-stack platform for posting notes with video and audio support using WebSocket for real-time post display. Integrated Cloudinary API for cloud-based asset storage and pagination for optimized server load.",
@@ -122,7 +264,7 @@ export const projects = [
     featured: false,
   },
   {
-    id: "7",
+    id: "8",
     title: "LiteraSEE",
     description:
       "IoT application using ESP32 smart eyeglasses to assist dyslexic individuals. Integrates Gemini AI for text correction, OCR Space API for real-world text parsing, and Voice RSS API for text-to-speech output with live camera feed display.",
@@ -133,6 +275,12 @@ export const projects = [
 ];
 
 export const featuredProjects = projects.filter((p) => p.featured);
+
+export const projectsWithDetail = projects.filter((p) => p.slug && p.detail);
+
+export function getProjectBySlug(slug: string) {
+  return projectsWithDetail.find((p) => p.slug === slug);
+}
 
 export const experience = [
   {

@@ -22,6 +22,9 @@
 .dev.vars
 .cloudflare/
 
+# large source media, kept out of public/ (Cloudflare Workers caps assets at 25 MiB)
+/assets/
+
 # production
 /build
 

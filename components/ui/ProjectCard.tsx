@@ -1,13 +1,40 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
-import { ExternalLink } from "lucide-react";
+import { ArrowRight, ExternalLink } from "lucide-react";
 import { GitHubIcon } from "@/components/ui/SocialIcons";
+import ProjectVideo from "@/components/ui/ProjectVideo";
+import { assetPath } from "@/lib/assets";
 import type { projects } from "@/data/portfolio";
 
 type Project = (typeof projects)[number];
 
 export default function ProjectCard({ project }: { project: Project }) {
+  const links = [
+    project.githubUrl && {
+      href: project.githubUrl,
+      label: "Source",
+      aria: `View ${project.title} source code on GitHub`,
+      icon: <GitHubIcon className="w-4 h-4" />,
+      className:
+        "text-gray-500 dark:text-text-secondary hover:text-gray-900 dark:hover:text-gray-100",
+    },
+    project.liveUrl && {
+      href: project.liveUrl,
+      label: "Live Demo",
+      aria: `View ${project.title} live demo`,
+      icon: <ExternalLink className="w-4 h-4" />,
+      className: "text-accent hover:text-accent-secondary",
+    },
+  ].filter(Boolean) as {
+    href: string;
+    label: string;
+    aria: string;
+    icon: React.ReactNode;
+    className: string;
+  }[];
+
   return (
     <motion.article
       initial={{ opacity: 0, y: 40 }}
@@ -19,13 +46,21 @@ export default function ProjectCard({ project }: { project: Project }) {
     >
       <div className="relative h-48 overflow-hidden bg-gray-100 dark:bg-[#0f1724]">
         <div className="absolute inset-0 bg-gradient-to-br from-accent/10 to-accent-secondary/10 dark:from-accent/5 dark:to-accent-secondary/5" />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-4xl font-bold font-mono text-gray-300 dark:text-gray-400 select-none">
-            <img src={project.image} alt={project.title.charAt(0)} />
-          </span>
-        </div>
+        {project.video ? (
+          <ProjectVideo video={project.video} className="h-full w-full" />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="text-4xl font-bold font-mono text-gray-300 dark:text-gray-400 select-none">
+              <img
+                src={assetPath(project.image)}
+                alt={project.title.charAt(0)}
+                className="max-h-full max-w-full object-contain"
+              />
+            </span>
+          </div>
+        )}
         <motion.div
-          className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
         />
       </div>
 
@@ -48,30 +83,32 @@ export default function ProjectCard({ project }: { project: Project }) {
           ))}
         </div>
 
-        <div className="flex items-center gap-3 pt-3 border-t border-gray-100 dark:border-border">
-          <a
-            href={project.githubUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-text-secondary hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
-            aria-label={`View ${project.title} source code on GitHub`}
-          >
-              <GitHubIcon className="w-4 h-4" />
-            <span>Source</span>
-          </a>
-          {project.liveUrl && (
-            <a
-              href={project.liveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 text-sm text-accent hover:text-accent-secondary transition-colors"
-              aria-label={`View ${project.title} live demo`}
-            >
-              <ExternalLink className="w-4 h-4" />
-              <span>Live Demo</span>
-            </a>
-          )}
-        </div>
+        {(links.length > 0 || project.slug) && (
+          <div className="flex items-center gap-3 pt-3 border-t border-gray-100 dark:border-border">
+            {links.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`flex items-center gap-1.5 text-sm transition-colors ${link.className}`}
+                aria-label={link.aria}
+              >
+                {link.icon}
+                <span>{link.label}</span>
+              </a>
+            ))}
+            {project.slug && (
+              <Link
+                href={`/projects/${project.slug}`}
+                className="group/read inline-flex items-center gap-1.5 text-sm text-accent hover:text-accent-secondary transition-colors"
+              >
+                <span>Read more</span>
+                <ArrowRight className="w-4 h-4 transition-transform group-hover/read:translate-x-0.5" />
+              </Link>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="absolute inset-0 rounded-xl ring-1 ring-inset ring-black/5 dark:ring-white/5 pointer-events-none" />

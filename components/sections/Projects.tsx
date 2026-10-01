@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { featuredProjects } from "@/data/portfolio";
 import ProjectCard from "@/components/ui/ProjectCard";
@@ -24,13 +25,13 @@ export default function Projects() {
                 Featured Work
             </h2>
           </div>
-          <a
+          <Link
             href="/projects"
             className="group inline-flex items-center gap-1.5 text-sm font-medium text-accent hover:text-accent-secondary transition-colors"
           >
             View all projects
             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
-          </a>
+          </Link>
         </motion.div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
