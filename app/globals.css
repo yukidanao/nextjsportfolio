@@ -36,6 +36,9 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    /* The navbar is `fixed` at h-16. Without this, hash navigation scrolls the
+       section heading underneath it. */
+    scroll-padding-top: 4rem;
   }
   body {
     background-color: var(--color-bg);

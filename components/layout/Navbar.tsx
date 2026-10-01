@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import ThemeToggle from "@/lib/theme";
@@ -8,11 +10,21 @@ import { navLinks } from "@/data/portfolio";
 import { useActiveSection } from "@/hooks/useActiveSection";
 import { cn } from "@/lib/utils";
 
+// `navLinks` stores bare fragments ("#about") because the sections only exist
+// on the home page. Prefixing with "/" turns them into real cross-route
+// links ("/#about") that Next.js resolves and scrolls to on arrival.
+const sections = navLinks.map((l) => ({
+  label: l.label,
+  id: l.href.slice(1),
+  href: `/${l.href}`,
+}));
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const sectionIds = navLinks.map((l) => l.href.slice(1));
-  const activeSection = useActiveSection(sectionIds);
+  const activeSection = useActiveSection(sections.map((s) => s.id));
+  const pathname = usePathname();
+  const onProjectsPage = pathname.startsWith("/projects");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -31,12 +43,9 @@ export default function Navbar() {
     };
   }, [mobileOpen]);
 
-  const handleNavClick = (href: string) => {
-    setMobileOpen(false);
-    const el = document.querySelector(href);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
-    }
+  const isCurrent = (id: string) => {
+    if (id === "projects" && onProjectsPage) return true;
+    return !onProjectsPage && activeSection === id;
   };
 
   return (
@@ -49,20 +58,20 @@ export default function Navbar() {
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <a
-            href="#"
+          <Link
+            href="/"
             className="text-lg font-semibold tracking-tight text-gray-900 dark:text-gray-100"
           >
             <span className="text-accent">.</span>leeleighnard
-          </a>
+          </Link>
 
           <nav className="hidden md:flex items-center gap-1">
-            {navLinks.map((link) => {
-              const isActive = activeSection === link.href.slice(1);
+            {sections.map((link) => {
+              const isActive = isCurrent(link.id);
               return (
-                <button
-                  key={link.href}
-                  onClick={() => handleNavClick(link.href)}
+                <Link
+                  key={link.id}
+                  href={link.href}
                   className={cn(
                     "relative px-3 py-2 text-sm font-medium rounded-lg transition-colors",
                     isActive
@@ -77,7 +86,7 @@ export default function Navbar() {
                       className="absolute bottom-0 inset-x-3 h-0.5 bg-accent rounded-full"
                     />
                   )}
-                </button>
+                </Link>
               );
             })}
             <div className="ml-2 pl-2 border-l border-gray-200 dark:border-border">
@@ -112,19 +121,20 @@ export default function Navbar() {
             className="md:hidden border-t border-gray-200/50 dark:border-border/50 bg-white dark:bg-[#0d1117] overflow-hidden"
           >
             <nav className="px-4 py-4 space-y-1">
-              {navLinks.map((link) => (
-                <button
-                  key={link.href}
-                  onClick={() => handleNavClick(link.href)}
+              {sections.map((link) => (
+                <Link
+                  key={link.id}
+                  href={link.href}
+                  onClick={() => setMobileOpen(false)}
                   className={cn(
-                    "block w-full text-left px-3 py-2.5 text-sm font-medium rounded-lg transition-colors",
-                    activeSection === link.href.slice(1)
+                    "block px-3 py-2.5 text-sm font-medium rounded-lg transition-colors",
+                    isCurrent(link.id)
                       ? "text-accent bg-accent/5"
                       : "text-gray-500 dark:text-text-secondary hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-surface-hover"
                   )}
                 >
                   {link.label}
-                </button>
+                </Link>
               ))}
             </nav>
           </motion.div>
